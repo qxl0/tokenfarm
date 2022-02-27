@@ -3,7 +3,16 @@ import helperConfig from "../helper-config.json";
 import networkMapping from "../chain-info/map.json";
 import { constants } from "ethers";
 import brownieConfig from "../brownie-config.json";
+import dapp from "../dapp.png";
+import eth from "../eth.png";
+import dai from "../dai.png";
+import { YourWallet } from "./yourWallet/YourWallet";
 
+export type Token = {
+  image: string;
+  address: string;
+  name: string;
+};
 export const Main = () => {
   // Show token values
   // get address of tokens
@@ -26,5 +35,10 @@ export const Main = () => {
     ? brownieConfig["networks"][networkName]["fau_token"]
     : constants.AddressZero;
 
-  return <div>Hi</div>;
+  const supportedTokens: Array<Token> = [
+    { image: dapp, address: dappTokenAddress, name: "DAPP" },
+    { image: eth, address: wethTokenAddress, name: "WETH" },
+    { image: dai, address: fauTokenAddress, name: "DAI" },
+  ];
+  return <YourWallet supportedTokens={supportedTokens} />;
 };

@@ -7,12 +7,11 @@ function App() {
   return (
     <DAppProvider
       config={{
-        supportedChains: [ChainId.Kovan, ChainId.Rinkeby],
+        supportedChains: [ChainId.Kovan],
       }}
     >
       <Header />
       <Container maxWidth="md">
-        <div>Hi</div>
         <Main />
       </Container>
     </DAppProvider>
