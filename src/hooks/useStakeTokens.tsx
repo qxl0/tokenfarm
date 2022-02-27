@@ -3,14 +3,19 @@ import TokenFarm from "../chain-info/TokenFarm.json";
 import ERC20 from "../chain-info/MockERC20.json";
 import networkMapping from "../chain-info/map.json";
 import { constants, Contract, utils } from "ethers";
-export const useStakeTokens = (tokenAddress: string) => {
+import { useState } from "react";
+
+export function useStakeTokens(tokenAddress: string) {
   // approve
   // stake tokens
   const { chainId } = useEthers();
+  console.log(chainId, "🍉");
   const { abi } = TokenFarm;
+  // console.log(abi, "🫐");
   const tokenFarmAddress = chainId
-    ? networkMapping[String(chainId)][0]
+    ? networkMapping[String(chainId)]["TokenFarm"][0]
     : constants.AddressZero;
+  console.log(tokenFarmAddress, "🖕");
   const tokenFarmInterface = new utils.Interface(abi);
   const tokenFarmContract = new Contract(tokenFarmAddress, tokenFarmInterface);
 
@@ -24,4 +29,11 @@ export const useStakeTokens = (tokenAddress: string) => {
     useContractFunction(erc20Contract, "approve", {
       transactionName: "Approve ERC20 transfer",
     });
-};
+
+  const approve = (amount: string) => {
+    return approveErc20Send(tokenFarmAddress, amount);
+  };
+
+  const [state, setState] = useState(approveErc20State);
+  return { approve, state };
+}
