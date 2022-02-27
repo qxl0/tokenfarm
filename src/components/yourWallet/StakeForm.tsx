@@ -1,8 +1,8 @@
 import { formatUnits } from "@ethersproject/units";
 import { Button, Input } from "@material-ui/core";
-import { useEthers, useTokenBalance } from "@usedapp/core";
+import { useEthers, useNotifications, useTokenBalance } from "@usedapp/core";
 import { utils } from "ethers";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStakeTokens } from "../../hooks";
 import { Token } from "../Main";
 
@@ -16,6 +16,9 @@ export default function StakeForm({ token }: StakeFormProps) {
   const formattedTokenBalance: number = tokenBalance
     ? parseFloat(formatUnits(tokenBalance, 18))
     : 0;
+
+  const { notifications } = useNotifications();
+
   const [amount, setAmount] = useState<
     number | string | Array<number | string>
   >(0);
@@ -33,6 +36,26 @@ export default function StakeForm({ token }: StakeFormProps) {
     return approveAndStake(amountAsWei.toString());
   };
 
+  useEffect(() => {
+    if (
+      notifications.filter(
+        (notification) =>
+          notification.type === "transactionSucceed" &&
+          notification.transactionName === "Approve ERC20 transfer"
+      ).length > 0
+    ) {
+      console.log("Approved!");
+    }
+    if (
+      notifications.filter(
+        (notification) =>
+          notification.type === "transactionSucceed" &&
+          notification.transactionName === "Stake Tokens"
+      ).length > 0
+    ) {
+      console.log("Stake Approved!");
+    }
+  }, [notifications]);
   return (
     <>
       <Input onChange={handleInputChange} />
