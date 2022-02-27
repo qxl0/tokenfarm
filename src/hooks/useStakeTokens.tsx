@@ -3,7 +3,7 @@ import TokenFarm from "../chain-info/TokenFarm.json";
 import ERC20 from "../chain-info/MockERC20.json";
 import networkMapping from "../chain-info/map.json";
 import { constants, Contract, utils } from "ethers";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function useStakeTokens(tokenAddress: string) {
   // approve
@@ -30,10 +30,25 @@ export function useStakeTokens(tokenAddress: string) {
       transactionName: "Approve ERC20 transfer",
     });
 
-  const approve = (amount: string) => {
+  const [state, setState] = useState(approveErc20State);
+
+  const approveAndStake = (amount: string) => {
+    setAmountToStake(amount);
     return approveErc20Send(tokenFarmAddress, amount);
   };
+  const { send: stakeSend, state: stakeStatge } = useContractFunction(
+    tokenFarmContract,
+    "stakeTokens",
+    {
+      transactionName: "Stake Tokens",
+    }
+  );
 
-  const [state, setState] = useState(approveErc20State);
-  return { approve, state };
+  const [amountToStake, setAmountToStake] = useState("0");
+  useEffect(() => {
+    if (approveErc20State.status === "Success") {
+      stakeSend(amountToStake, tokenAddress);
+    }
+  }, [approveErc20State, tokenAddress, amountToStake]);
+  return { approveAndStake, approveErc20State };
 }
