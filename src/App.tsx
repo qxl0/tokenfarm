@@ -1,4 +1,5 @@
 import { ChainId, DAppProvider } from "@usedapp/core";
+import { Header } from "./components/Header";
 
 function App() {
   return (
@@ -7,7 +8,7 @@ function App() {
         supportedChains: [ChainId.Kovan, ChainId.Rinkeby],
       }}
     >
-      <div className="App">Hi</div>
+      <Header />
     </DAppProvider>
   );
 }
