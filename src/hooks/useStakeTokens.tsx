@@ -61,5 +61,5 @@ export function useStakeTokens(tokenAddress: string) {
     }
   }, [approveErc20State, stakeState]);
 
-  return { approveAndStake, approveErc20State };
+  return { approveAndStake, state };
 }
