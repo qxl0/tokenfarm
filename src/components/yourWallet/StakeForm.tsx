@@ -1,5 +1,5 @@
 import { formatUnits } from "@ethersproject/units";
-import { Button, Input } from "@material-ui/core";
+import { Button, CircularProgress, Input } from "@material-ui/core";
 import { useEthers, useNotifications, useTokenBalance } from "@usedapp/core";
 import { utils } from "ethers";
 import React, { useEffect, useState } from "react";
@@ -36,6 +36,7 @@ export default function StakeForm({ token }: StakeFormProps) {
     return approveAndStake(amountAsWei.toString());
   };
 
+  const isMining = approveErc20State.status === "Mining";
   useEffect(() => {
     if (
       notifications.filter(
@@ -59,8 +60,13 @@ export default function StakeForm({ token }: StakeFormProps) {
   return (
     <>
       <Input onChange={handleInputChange} />
-      <Button onClick={handleStakeSubmit} color="primary" size="large">
-        Stake
+      <Button
+        onClick={handleStakeSubmit}
+        color="primary"
+        size="large"
+        disabled={isMining}
+      >
+        {isMining ? <CircularProgress size={26} /> : "Stake"}
       </Button>
     </>
   );
